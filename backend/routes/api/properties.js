@@ -120,16 +120,21 @@ router.post(
   })
 );
 
+// Performance Stuff.
+const { performance } = require('perf_hooks');
+
 router.get(
   "/:id/all",
   asyncHandler(async (req, res) => {
+    console.log('==================== getAllProperties // start ====================');
+    const fnStart = performance.now();
     const { id } = req.params;
     const properties = await Property.findAll({
       where: { ownerId: id },
       include: [Unit, PropertyFeature],
     });
     let numEmpty = 0;
-    properties.map(async (prop) => {
+    const mapRes = properties.map(async (prop) => {
       const emptyUnits = await Unit.findAll({
         where: { propertyId: prop.id, isVacant: true },
       });
@@ -137,6 +142,11 @@ router.get(
       prop[emptyUnits] = empty2.length;
       numEmpty += empty2.length;
       return prop;
+    });
+    Promise.all(mapRes).then(v => {
+      const fnEnd = performance.now();
+      console.log('====================  getAllProperties // end  ====================');
+      console.log(fnEnd - fnStart);
     });
     console.log(numEmpty);
     return res.json({

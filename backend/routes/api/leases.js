@@ -125,9 +125,14 @@ router.get(
   })
 );
 
+// Performance Stuff.
+const { performance } = require('perf_hooks');
+
 router.get(
   '/:userId/:propertyId/all',
   asyncHandler(async (req, res) => {
+    console.log('==================== getAllLeases // start ====================');
+    const fnStart = performance.now();
     const {userId,propertyId} = req.params 
     const property = await Property.findOne({where:{id:propertyId}});
     const units = await Unit.findAll({
@@ -149,6 +154,9 @@ router.get(
          })
     }))
       
+    const fnEnd = performance.now();
+    console.log('====================  getAllLeases // end  ====================');
+    console.log(fnEnd - fnStart);
     return res.json({
        leases
     });

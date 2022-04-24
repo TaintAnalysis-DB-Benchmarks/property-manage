@@ -17,6 +17,8 @@ const {
 
 const unit = require('../../db/models/unit');
 
+const { performance } = require('perf_hooks');
+
 const router = express.Router();
 router.post('/new', asyncHandler(async (req, res) => {
   //   const propertyId = req.params  
@@ -156,6 +158,8 @@ router.get('/:userId/all', asyncHandler(async (req, res) => {
   });
 }));
 router.get('/:userId/:propertyId/all', asyncHandler(async (req, res) => {
+  console.log('==================== getAllLeases // start ====================');
+  const fnStart = performance.now();
   const {
     userId,
     propertyId
@@ -183,6 +187,9 @@ router.get('/:userId/:propertyId/all', asyncHandler(async (req, res) => {
     // console.log(unit.unitNumber)
     return leases_uxlq.filter(x => x.unitId === unit.unitNumber);
   }));
+  const fnEnd = performance.now();
+  console.log('====================  getAllLeases // end  ====================');
+  console.log(fnEnd - fnStart);
   return res.json({
     leases
   });

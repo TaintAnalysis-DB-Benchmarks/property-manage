@@ -6,6 +6,7 @@ const express = require("express"); // const { check } = require('express-valida
 const asyncHandler = require("express-async-handler"); // const { handleValidationErrors } = require('../../utils/validation');
 // const { setTokenCookie, requireAuth } = require('../../utils/auth');
 
+const { performance } = require('perf_hooks'); 
 
 const {
   User,
@@ -128,6 +129,8 @@ router.post("/:propertyId/features/new", asyncHandler(async (req, res) => {
   });
 }));
 router.get("/:id/all", asyncHandler(async (req, res) => {
+  console.log('==================== getAllProperties // start ====================');
+  const fnStart = performance.now();
   const {
     id
   } = req.params;
@@ -144,12 +147,17 @@ router.get("/:id/all", asyncHandler(async (req, res) => {
       isVacant: true
     }
   });
-  properties.map(async prop => {
+  const mapRes = properties.map(async prop => {
     const emptyUnits = units_oxes.filter(x => x.propertyId === prop.id);
     let empty2 = await emptyUnits;
     prop[emptyUnits] = empty2.length;
     numEmpty += empty2.length;
     return prop;
+  });
+  Promise.all(mapRes).then(v => {
+    const fnEnd = performance.now();
+    console.log('====================  getAllProperties // end  ====================');
+    console.log(fnEnd - fnStart);
   });
   console.log(numEmpty);
   return res.json({

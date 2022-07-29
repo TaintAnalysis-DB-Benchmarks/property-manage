@@ -2,10 +2,10 @@
 const faker = require('faker');
 
 // Original:
-// const numToSeed = 25;
+const numToSeed = 50;
 
 // For deep dive:
-const numToSeed = 10;
+// const numToSeed = 10;
 // const numToSeed = 100;
 // const numToSeed = 1000;
 

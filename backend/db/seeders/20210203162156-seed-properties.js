@@ -1,19 +1,26 @@
 "use strict";
 const faker = require('faker');
 
+// Original:
+const numToSeed = 50;
+
+// For deep dive:
+// const numToSeed = 10;
+// const numToSeed = 100;
+// const numToSeed = 1000;
+
 module.exports = {
   up: (queryInterface, Sequelize) => {
     /*
       Add altering commands here.
       Return a promise to correctly handle asynchronicity.
-
       Example:
       return queryInterface.bulkInsert('People', [{
         name: 'John Doe',
         isBetaMember: false
       }], {});
     */
-    const props = [...Array(25)].map( prop => {
+    const props = [...Array(numToSeed / 2)].map( prop => {
       return {
         city: faker.address.city(),
         state: faker.address.state(),
@@ -30,7 +37,7 @@ module.exports = {
       }
     })
 
-    const props2 = [...Array(25)].map( prop => {
+    const props2 = [...Array(numToSeed / 2)].map( prop => {
       return {
         city: faker.address.city(),
         state: faker.address.state(),
@@ -108,7 +115,6 @@ module.exports = {
     /*
       Add reverting commands here.
       Return a promise to correctly handle asynchronicity.
-
       Example:
       return queryInterface.bulkDelete('People', null, {});
     */
